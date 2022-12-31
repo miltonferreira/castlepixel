@@ -12,8 +12,12 @@ public class PlayerController : MonoBehaviour
     public Transform floorCollider; // colisor do pé do player
     public Transform skin;
 
-    int numeroCombo;
-    public float tempoCombo;
+    // combos ------------------------------------------------------
+    public int ComboNun;           // quantidades de combos, aqui são 1 e 2
+    public float comboTime; // tempo para poder combar ataques
+
+    // dash ------------------------------------------------------
+    public float dashTime;
 
     // Start is called before the first frame update
     void Start()
@@ -26,20 +30,33 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        tempoCombo = tempoCombo + Time.deltaTime;
+        // desativa este script --------------------------------------------------------------------
+        if(GetComponent<Character>().life <= 0){this.enabled = false;}
+
+        // animação de dash ------------------------------------------------------------------------
+        dashTime = dashTime + Time.deltaTime;
+        if(Input.GetButtonDown("Fire2") && dashTime > 1f){
+            dashTime = 0f;
+            skin.GetComponent<Animator>().Play("PlayerDash", -1);
+            rb.velocity = Vector2.zero; // zera velocidade xy
+            rb.AddForce(new Vector2(skin.localScale.x * 150f, 0f));
+        }
+
+        // animação de ataque/combo ----------------------------------------------------------------
+        comboTime = comboTime + Time.deltaTime;
 
         // *** countdown é o tempo para poder atacar novamente
-        if(Input.GetButtonDown("Fire1") && tempoCombo > 0.5f){
+        if(Input.GetButtonDown("Fire1") && comboTime > 0.5f){
 
-            numeroCombo++;
-            if(numeroCombo>2){numeroCombo = 1;} // volta para primeiro attack
+            ComboNun++;
+            if(ComboNun>2){ComboNun = 1;} // volta para primeiro attack
 
-            tempoCombo = 0f;
-            skin.GetComponent<Animator>().Play("PlayerAttack"+numeroCombo, -1);
+            comboTime = 0f;
+            skin.GetComponent<Animator>().Play("PlayerAttack"+ComboNun, -1);
         }
-        if(tempoCombo >= 0.6f){numeroCombo = 0;} // reseta ataque com combo
+        if(comboTime >= 0.6f){ComboNun = 0;} // reseta ataque com combo
 
-        // faz player pular
+        // animação de pular ---------------------------------------------------------------------
         bool canJump = Physics2D.OverlapCircle(floorCollider.position, 0.1f, floorLayer);
         if(Input.GetButtonDown("Jump") && canJump){
             skin.GetComponent<Animator>().Play("PlayerJump", -1);
@@ -47,9 +64,9 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(new Vector2(0f, 150f));
         }
 
+        // animação de andar ------------------------------------------------------------------------
         vel = new Vector2(Input.GetAxisRaw("Horizontal") * 1.5f, rb.velocity.y);
 
-        // animação de andar
         if(Input.GetAxisRaw("Horizontal") != 0){
             skin.localScale = new Vector3(Input.GetAxisRaw("Horizontal"), 1f, 1f);
             skin.GetComponent<Animator>().SetBool("PlayerRun", true);
@@ -60,6 +77,8 @@ public class PlayerController : MonoBehaviour
 
     // FixedUpdate ideal para fisica no Unity
     private void FixedUpdate() {
-        rb.velocity = vel;
+        if(dashTime > 0.5f){
+            rb.velocity = vel;
+        }
     }
 }
