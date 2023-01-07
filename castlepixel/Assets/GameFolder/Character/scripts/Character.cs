@@ -6,6 +6,7 @@ public class Character : MonoBehaviour
 {
 
     public int life;
+    private bool isDead;
     public Transform skin;
 
     // Start is called before the first frame update
@@ -17,7 +18,8 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(life <=0){
+        if(life <=0 && !isDead){
+            isDead = true;
             if(skin != null)
             skin.GetComponent<Animator>().Play("Die", -1);
         }
