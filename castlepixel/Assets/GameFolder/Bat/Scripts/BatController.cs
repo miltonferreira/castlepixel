@@ -5,6 +5,9 @@ using UnityEngine;
 public class BatController : MonoBehaviour
 {
 
+    [Header("Velocidade Movimento")]
+    public float speedMove;
+
     public Transform player;
 
     public float attackTime;
@@ -26,9 +29,9 @@ public class BatController : MonoBehaviour
             this.enabled = false;
         }
 
-        if(Vector2.Distance(transform.position, player.position) > 0.2f){
+        if(Vector2.Distance(transform.position, player.GetComponent<CapsuleCollider2D>().bounds.center) > 0.9f){
             attackTime = 0f;
-            transform.position = Vector2.MoveTowards(transform.position, player.position, 0.5f*Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, player.GetComponent<CapsuleCollider2D>().bounds.center, speedMove * Time.deltaTime);
         }else{
             attackTime = attackTime + Time.deltaTime;
             if(attackTime >= 1f){

@@ -8,6 +8,12 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Vector2 vel;
 
+    [Header("velocidade Movimento")]
+    public float speedMove;
+    [Header("Altura Pulo")]
+    public float jumpForce;
+    [Header("Velocidade Dash")]
+    public float dashForce;
     public LayerMask floorLayer;    // layer do chao do game
     public Transform floorCollider; // colisor do pé do player
     public Transform skin;
@@ -39,7 +45,7 @@ public class PlayerController : MonoBehaviour
             dashTime = 0f;
             skin.GetComponent<Animator>().Play("PlayerDash", -1);
             rb.velocity = Vector2.zero; // zera velocidade xy
-            rb.AddForce(new Vector2(skin.localScale.x * 150f, 0f));
+            rb.AddForce(new Vector2(skin.localScale.x * dashForce, 0f));
         }
 
         // animação de ataque/combo ----------------------------------------------------------------
@@ -61,11 +67,11 @@ public class PlayerController : MonoBehaviour
         if(Input.GetButtonDown("Jump") && canJump){
             skin.GetComponent<Animator>().Play("PlayerJump", -1);
             rb.velocity = Vector2.zero; // zera velocidade xy
-            rb.AddForce(new Vector2(0f, 150f));
+            rb.AddForce(new Vector2(0f, jumpForce));
         }
 
         // animação de andar ------------------------------------------------------------------------
-        vel = new Vector2(Input.GetAxisRaw("Horizontal") * 1.5f, rb.velocity.y);
+        vel = new Vector2(Input.GetAxisRaw("Horizontal") * speedMove, rb.velocity.y);
 
         if(Input.GetAxisRaw("Horizontal") != 0){
             skin.localScale = new Vector3(Input.GetAxisRaw("Horizontal"), 1f, 1f);

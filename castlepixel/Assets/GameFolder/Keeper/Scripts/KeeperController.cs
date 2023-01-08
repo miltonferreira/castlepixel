@@ -5,6 +5,9 @@ using UnityEngine;
 public class KeeperController : MonoBehaviour
 {
 
+    [Header("Velocidade Movimento")]
+    public float speedMove;
+
     public Transform skin;
     public Transform keeperRange;
 
@@ -39,13 +42,13 @@ public class KeeperController : MonoBehaviour
             if(Vector2.Distance(transform.position, b.position) < 0.1f){
                 goRight = false;    // inverte para esquerda
             }
-            transform.position = Vector2.MoveTowards(transform.position, b.position, 0.2f * Time.deltaTime); // vai para direita
+            transform.position = Vector2.MoveTowards(transform.position, b.position, speedMove * Time.deltaTime); // vai para direita
         }else{
             skin.localScale = new Vector3(-1f,1f,1f);
             if(Vector2.Distance(transform.position, a.position) < 0.1f){
                 goRight = true;    // inverte para direita
             }
-            transform.position = Vector2.MoveTowards(transform.position, a.position, 0.2f * Time.deltaTime); // vai para esquerda
+            transform.position = Vector2.MoveTowards(transform.position, a.position, speedMove * Time.deltaTime); // vai para esquerda
         }
         
     }
