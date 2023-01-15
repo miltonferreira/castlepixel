@@ -14,7 +14,8 @@ public class SpikeTrap : MonoBehaviour
         if(other.CompareTag("Player")){
             other.transform.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             other.transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 150f));
-            other.transform.GetComponent<Character>().life--;
+            other.transform.GetComponent<Character>().PlayerDamage(1);    // quantidade de dano que player leva
+
             if(other.transform.GetComponent<Character>().life <= 0){
                 GetComponent<BoxCollider2D>().enabled = false;
             }

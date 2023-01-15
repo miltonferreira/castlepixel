@@ -14,12 +14,6 @@ public class GhostController : MonoBehaviour
 
     public bool goRight;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -42,8 +36,8 @@ public class GhostController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.CompareTag("Player")){
-            other.GetComponent<Character>().life--;
-            this.gameObject.SetActive(false);   // desativa ghost
+            other.GetComponent<Character>().PlayerDamage(1);    // quantidade de dano que player leva
+            this.gameObject.SetActive(false);                   // desativa ghost
         }
     }
 }

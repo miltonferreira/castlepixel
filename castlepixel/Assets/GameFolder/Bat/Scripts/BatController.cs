@@ -34,9 +34,9 @@ public class BatController : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, player.GetComponent<CapsuleCollider2D>().bounds.center, speedMove * Time.deltaTime);
         }else{
             attackTime = attackTime + Time.deltaTime;
-            if(attackTime >= 1f){
+            if(attackTime >= 0.6f){ //0.6 é o tempo para bat dá dano player
                 attackTime = 0f;
-                player.GetComponent<Character>().life--;
+                player.GetComponent<Character>().PlayerDamage(1);   // quantidade de dano que player leva
             }
         }
     }

@@ -8,18 +8,6 @@ public class bearTrap : MonoBehaviour
     Transform player;
     public Transform skin;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.CompareTag("Player")){
 
@@ -35,6 +23,8 @@ public class bearTrap : MonoBehaviour
             player.GetComponent<PlayerController>().enabled = false;
             player.GetComponent<PlayerController>().skin.GetComponent<Animator>().SetBool("PlayerRun", false);
             player.GetComponent<PlayerController>().skin.GetComponent<Animator>().Play("PlayerIdle", -1);
+
+            player.transform.GetComponent<Character>().PlayerDamage(1);    // quantidade de dano que player leva
             
             Invoke("ReleasePlayer", 2f);
         }
