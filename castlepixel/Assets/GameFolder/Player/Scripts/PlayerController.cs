@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,10 +26,24 @@ public class PlayerController : MonoBehaviour
     // dash ------------------------------------------------------
     public float dashTime;
 
+    public string currentLevel; // pega scene atual
+
+    // sons do player --------------------------------------------
+    [HideInInspector]
+    public AudioSource audioSource;
+    [Header("Sons Player")]
+    public AudioClip attack1Sound, attack2Sound, groudedSound, damageSound, dashSound;
+    private bool isGrounded;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        audioSource = GetComponent<AudioSource>();
+
+        currentLevel = SceneManager.GetActiveScene().name;  // pega nome da scene
+        DontDestroyOnLoad(transform.gameObject);            // não destroi player
         
     }
 
@@ -36,12 +51,19 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
+        if(!currentLevel.Equals(SceneManager.GetActiveScene().name)){
+            currentLevel = SceneManager.GetActiveScene().name;                  // pega nome da scene
+            transform.position = GameObject.Find("Spawn").transform.position;   //posiciona player no spawn
+        }
+
         // desativa este script --------------------------------------------------------------------
         if(GetComponent<Character>().life <= 0){this.enabled = false;}
 
         // animação de dash ------------------------------------------------------------------------
         dashTime = dashTime + Time.deltaTime;
         if(Input.GetButtonDown("Fire2") && dashTime > 1f){
+            audioSource.PlayOneShot(dashSound, 0.5f);
+
             dashTime = 0f;
             skin.GetComponent<Animator>().Play("PlayerDash", -1);
             rb.velocity = Vector2.zero; // zera velocidade xy
@@ -59,11 +81,25 @@ public class PlayerController : MonoBehaviour
 
             comboTime = 0f;
             skin.GetComponent<Animator>().Play("PlayerAttack"+ComboNun, -1);
+
+            if(ComboNun == 1){
+                audioSource.PlayOneShot(attack1Sound, 0.5f);
+            }else{
+                audioSource.PlayOneShot(attack2Sound, 0.5f);
+            }
         }
         if(comboTime >= 0.6f){ComboNun = 0;} // reseta ataque com combo
 
         // animação de pular ---------------------------------------------------------------------
         bool canJump = Physics2D.OverlapCircle(floorCollider.position, 0.1f, floorLayer);
+
+        if(canJump && !isGrounded){
+            isGrounded = true;
+            audioSource.PlayOneShot(groudedSound, 0.5f);
+        }else if(!canJump){
+            isGrounded = false;
+        }
+
         if(Input.GetButtonDown("Jump") && canJump){
             skin.GetComponent<Animator>().Play("PlayerJump", -1);
             rb.velocity = Vector2.zero; // zera velocidade xy

@@ -27,6 +27,7 @@ public class Character : MonoBehaviour
         life-=value;
         skin.GetComponent<Animator>().Play("PlayerBlink", 1);
         heartCountText.text = "x"+life.ToString();
+        GetComponent<PlayerController>().audioSource.PlayOneShot(GetComponent<PlayerController>().damageSound, 0.5f);
     }
 
     public void addLife(int value){
