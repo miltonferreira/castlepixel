@@ -8,8 +8,13 @@ public class bearTrap : MonoBehaviour
     Transform player;
     public Transform skin;
 
+    public AudioSource audioSource;
+    public AudioClip audioClip;
+
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.CompareTag("Player")){
+
+            audioSource.PlayOneShot(audioClip, 0.5f);
 
             // ações da bearTrap -----------------------------------
             skin.GetComponent<Animator>().Play("Stuck", -1);

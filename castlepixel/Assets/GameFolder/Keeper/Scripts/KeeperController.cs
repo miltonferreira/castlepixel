@@ -16,6 +16,9 @@ public class KeeperController : MonoBehaviour
 
     public bool goRight;
 
+    public AudioSource audioSource;
+    public AudioClip dieSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,11 +29,12 @@ public class KeeperController : MonoBehaviour
     void Update()
     {
 
-        // desativa este script --------------------------------------------------------------------
+        // desativa este script quando keeper morrer -----------------------------------------------
         if(GetComponent<Character>().life <= 0){
-            keeperRange.GetComponent<CircleCollider2D>().enabled = false;    // desativa colisor de range
-            GetComponent<CapsuleCollider2D>().enabled = false;      // desativa colisor do keeper
-            this.enabled = false;            
+            keeperRange.GetComponent<CircleCollider2D>().enabled = false;   // desativa colisor de range
+            GetComponent<CapsuleCollider2D>().enabled = false;              // desativa colisor do keeper
+            this.enabled = false;
+            audioSource.PlayOneShot(dieSound,0.5f);  // som de morte
         }
 
         if(skin.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("KeeperAttack")){
