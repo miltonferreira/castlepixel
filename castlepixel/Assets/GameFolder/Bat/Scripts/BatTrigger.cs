@@ -23,6 +23,7 @@ public class BatTrigger : MonoBehaviour
         if(other.CompareTag("Player")){
             foreach(Transform bat in bats){
                 bat.GetComponent<BatController>().enabled = true;
+                bat.GetComponent<BatController>().player = other.transform;
             }
         }
     }

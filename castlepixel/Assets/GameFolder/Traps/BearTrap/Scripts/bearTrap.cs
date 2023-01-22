@@ -32,10 +32,16 @@ public class bearTrap : MonoBehaviour
             player.transform.GetComponent<Character>().PlayerDamage(1);    // quantidade de dano que player leva
             
             Invoke("ReleasePlayer", 2f);
+            Invoke("ResetTrap", 10f);
         }
     }
 
     void ReleasePlayer(){
         player.GetComponent<PlayerController>().enabled = true;
+    }
+
+    void ResetTrap(){
+        GetComponent<BoxCollider2D>().enabled = true;       // ativa colisor
+        skin.GetComponent<Animator>().Play("UnStuck",-1);   
     }
 }
