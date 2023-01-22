@@ -35,6 +35,9 @@ public class PlayerController : MonoBehaviour
     public AudioClip attack1Sound, attack2Sound, groudedSound, damageSound, dashSound;
     private bool isGrounded;
 
+    public Transform gameOverScreen;
+    public Transform pauseScreen;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,7 +60,15 @@ public class PlayerController : MonoBehaviour
         }
 
         // desativa este script --------------------------------------------------------------------
-        if(GetComponent<Character>().life <= 0){this.enabled = false;}
+        if(GetComponent<Character>().life <= 0){
+            gameOverScreen.GetComponent<GameOver>().enabled = true;
+            this.enabled = false;
+        }
+
+        // botao de pausa do game ------------------------------------------------------------------
+        if(Input.GetButtonDown("Cancel")){
+            pauseScreen.GetComponent<Pause>().enabled = !pauseScreen.GetComponent<Pause>().enabled;
+        }
 
         // animação de dash ------------------------------------------------------------------------
         dashTime = dashTime + Time.deltaTime;
@@ -122,5 +133,9 @@ public class PlayerController : MonoBehaviour
         if(dashTime > 0.5f){
             rb.velocity = vel;
         }
+    }
+
+    public void DestroyPlayer(){
+        Destroy(transform.gameObject);
     }
 }
